@@ -2,14 +2,13 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-const PORT = 5050;
 
-// Basic middleware
+// Render provides PORT automatically
+const PORT = process.env.PORT || 5050;
+
+// Middleware
 app.use(cors());
 app.use(express.json());
-
-// IMPORTANT: these routes do not use MongoDB,
-// authentication, or any other middleware.
 
 // Home
 app.get("/", (req, res) => {
@@ -37,7 +36,7 @@ app.get("/api/test", (req, res) => {
   });
 });
 
-// Simple profile test
+// Profile test
 app.post("/api/profile", (req, res) => {
   const profile = req.body;
 
@@ -68,15 +67,11 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, "127.0.0.1", () => {
-  console.log("");
+app.listen(PORT, "0.0.0.0", () => {
   console.log("======================================");
   console.log("       SKILLSWAP BACKEND 🚀");
   console.log("======================================");
-  console.log(`Server: http://127.0.0.1:${PORT}`);
-  console.log(`Health: http://127.0.0.1:${PORT}/api/health`);
-  console.log(`Test:   http://127.0.0.1:${PORT}/api/test`);
-  console.log("======================================");
+  console.log(`Server running on port ${PORT}`);
   console.log("SERVER IS READY...");
-  console.log("");
+  console.log("======================================");
 });
