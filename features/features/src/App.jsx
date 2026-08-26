@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-const API_URL = "http://127.0.0.1:5050/api";
+const API_URL = "https://skillswap-lwpn.onrender.com";
 
 const initialProfile = {
   name: "Sneha",
@@ -175,7 +175,7 @@ function App() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${API_URL}/profile`, {
+      const response = await fetch(`${API_URL}/api/profile`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),
