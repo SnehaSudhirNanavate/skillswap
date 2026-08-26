@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>SkillM8 - Matches</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at 10% 20%, #e5f8fa, transparent 30%),
+        radial-gradient(circle at 90% 20%, #eee5ff, transparent 30%),
+        #f8f7fc;
+      color: #193b52;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      width: 92%;
+      margin: 20px auto;
+
+      padding: 20px 30px;
+
+      background: white;
+
+      border-radius: 22px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      box-shadow: 0 10px 35px rgba(30, 40, 80, 0.08);
+
+      position: sticky;
+      top: 15px;
+
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 30px;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: #159fae;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-links button {
+      border: none;
+      background: transparent;
+
+      padding: 12px 18px;
+
+      border-radius: 12px;
+
+      font-size: 15px;
+      font-weight: 700;
+
+      color: #60758a;
+
+      cursor: pointer;
+    }
+
+    .nav-links button:hover,
+    .nav-links .active {
+      background: #159fae;
+      color: white;
+    }
+
+    /* MAIN */
+
+    .container {
+      width: 92%;
+      max-width: 1200px;
+
+      margin: 60px auto;
+    }
+
+    .heading {
+      margin-bottom: 40px;
+    }
+
+    .eyebrow {
+      color: #159fae;
+
+      font-size: 13px;
+      font-weight: 800;
+
+      letter-spacing: 3px;
+    }
+
+    h1 {
+      font-size: 55px;
+      margin: 12px 0;
+    }
+
+    h1 span {
+      color: #159fae;
+    }
+
+    .subtitle {
+      color: #60758a;
+
+      font-size: 18px;
+
+      max-width: 700px;
+
+      line-height: 1.6;
+    }
+
+    /* MATCH GRID */
+
+    .matches {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 25px;
+    }
+
+    /* CARD */
+
+    .card {
+      background: white;
+
+      border-radius: 25px;
+
+      padding: 28px;
+
+      border: 1px solid #e7e4ef;
+
+      box-shadow:
+        0 15px 40px rgba(30, 40, 80, 0.08);
+
+      transition: 0.3s;
+
+      animation: appear 0.7s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+
+      box-shadow:
+        0 25px 50px rgba(30, 40, 80, 0.15);
+    }
+
+    @keyframes appear {
+
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+    }
+
+    /* SCORE */
+
+    .score {
+      float: right;
+
+      width: 65px;
+      height: 65px;
+
+      border-radius: 50%;
+
+      background:
+        linear-gradient(
+          135deg,
+          #159fae,
+          #7651d6
+        );
+
+      color: white;
+
+      display: flex;
+      flex-direction: column;
+
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score strong {
+      font-size: 17px;
+    }
+
+    .score small {
+      font-size: 9px;
+    }
+
+    /* PROFILE */
+
+    .person {
+      display: flex;
+
+      align-items: center;
+
+      gap: 15px;
+
+      margin-bottom: 25px;
+    }
+
+    .avatar {
+      width: 75px;
+      height: 75px;
+
+      border-radius: 50%;
+
+      background: #eee9ff;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 40px;
+    }
+
+    .person h2 {
+      margin: 0 0 6px;
+    }
+
+    .person p {
+      margin: 4px 0;
+
+      color: #718096;
+
+      font-size: 14px;
+    }
+
+    /* SECTIONS */
+
+    .section {
+      margin-top: 20px;
+    }
+
+    .section h3 {
+      font-size: 13px;
+
+      color: #718096;
+
+      text-transform: uppercase;
+
+      letter-spacing: 1px;
+    }
+
+    .tags {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 8px;
+    }
+
+    .tag {
+      padding: 8px 12px;
+
+      border-radius: 30px;
+
+      background: #e8f8fa;
+
+      color: #15919d;
+
+      font-size: 13px;
+
+      font-weight: 700;
+    }
+
+    .teach {
+      background: #eee9ff;
+
+      color: #6746c5;
+    }
+
+    .learn {
+      background: #fbe9f3;
+
+      color: #ad4e7a;
+    }
+
+    /* BUTTON */
+
+    .connect {
+      width: 100%;
+
+      margin-top: 25px;
+
+      padding: 15px;
+
+      border: none;
+
+      border-radius: 14px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #159fae,
+          #7651d6
+        );
+
+      color: white;
+
+      font-size: 16px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition: 0.25s;
+    }
+
+    .connect:hover {
+      transform: scale(1.02);
+    }
+
+    /* MOBILE */
+
+    @media(max-width: 900px) {
+
+      .matches {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      h1 {
+        font-size: 45px;
+      }
+
+    }
+
+    @media(max-width: 600px) {
+
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .nav-links {
+        overflow-x: auto;
+      }
+
+      .matches {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+
+  <nav class="navbar">
+
+    <div class="logo">
+      Skill<span>M8</span>
+    </div>
+
+    <div class="nav-links">
+
+      <button
+        onclick="window.location.href='/'">
+        🏠 Dashboard
+      </button>
+
+      <button
+        onclick="window.location.href='/'">
+        👤 Profile
+      </button>
+
+      <button class="active">
+        💜 Matches
+      </button>
+
+      <button>
+        💬 Messages
+      </button>
+
+    </div>
+
+  </nav>
+
+
+  <!-- MAIN -->
+
+  <main class="container">
+
+    <div class="heading">
+
+      <span class="eyebrow">
+        ✨ SMART MATCHING
+      </span>
+
+      <h1>
+        Find your
+        <span>skill matches.</span>
+      </h1>
+
+      <p class="subtitle">
+        Discover students who can teach you something
+        you want to learn — and learn something from you.
+      </p>
+
+    </div>
+
+
+    <!-- MATCHES -->
+
+    <div class="matches">
+
+
+      <!-- RAHUL -->
+
+      <div class="card">
+
+        <div class="score">
+          <strong>96%</strong>
+          <small>MATCH</small>
+        </div>
+
+        <div class="person">
+
+          <div class="avatar">
+            👨🏻‍💻
+          </div>
+
+          <div>
+
+            <h2>Rahul</h2>
+
+            <p>
+              📍 Bangalore
+            </p>
+
+            <p>
+              🎂 21 years
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <h3>
+            🗣️ Languages
+          </h3>
+
+          <div class="tags">
+
+            <span class="tag">
+              English
+            </span>
+
+            <span class="tag">
+              Hindi
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <h3>
+            💡 Can Teach
+          </h3>
+
+          <div class="tags">
+
+            <span class="tag teach">
+              Python
+            </span>
+
+            <span class="tag teach">
+              Java
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <h3>
+            🎯 Wants To Learn
+          </h3>
+
+          <div class="tags">
+
+            <span class="tag learn">
+              UI/UX
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="connect"
+          onclick="connect('Rahul')">
+          💜 Connect
+        </button>
+
+      </div>
+
+
+      <!-- ANANYA -->
+
+      <div class="card">
+
+        <div class="score">
+          <strong>92%</strong>
+          <small>MATCH</small>
+        </div>
+
+        <div class="person">
+
+          <div class="avatar">
+            👩🏻‍💻
+          </div>
+
+          <div>
+
+            <h2>Ananya</h2>
+
+            <p>
+              📍 Bangalore
+            </p>
+
+            <p>
+              🎂 20 years
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <h3>
+            🗣️ Languages
+          </h3>
+
+          <div class="tags">
+
+            <span class="tag">
+              English
+            </span>
+
+            <span class="tag">
+              Hindi
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <h3>
+            💡 Can Teach
+          </h3>
+
+          <div class="tags">
+
+            <span class="tag teach">
+              UI/UX
+            </span>
+
+            <span class="tag teach">
+              Figma
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <h3>
+            🎯 Wants To Learn
+          </h3>
+
+          <div class="tags">
+
+            <span class="tag learn">
+              Python
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="connect"
+          onclick="connect('Ananya')">
+          💜 Connect
+        </button>
+
+      </div>
+
+
+      <!-- ARJUN -->
+
+      <div class="card">
+
+        <div class="score">
+          <strong>84%</strong>
+          <small>MATCH</small>
+        </div>
+
+        <div class="person">
+
+          <div class="avatar">
+            👨🏻‍🎓
+          </div>
+
+          <div>
+
+            <h2>Arjun</h2>
+
+            <p>
+              📍 Mysore
+            </p>
+
+            <p>
+              🎂 22 years
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <h3>
+            🗣️ Languages
+          </h3>
+
+          <div class="tags">
+
+            <span class="tag">
+              English
+            </span>
+
+            <span class="tag">
+              Kannada
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <h3>
+            💡 Can Teach
+          </h3>
+
+          <div class="tags">
+
+            <span class="tag teach">
+              React
+            </span>
+
+            <span class="tag teach">
+              HTML/CSS
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <h3>
+            🎯 Wants To Learn
+          </h3>
+
+          <div class="tags">
+
+            <span class="tag learn">
+              Java
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="connect"
+          onclick="connect('Arjun')">
+          💜 Connect
+        </button>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <script>
+
+    function connect(name) {
+
+      alert(
+        "💜 Connection request sent to " +
+        name +
+        "!"
+      );
+
+    }
+
+  </script>
+
+</body>
+</html>
