@@ -1,212 +1,294 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Matching.css";
 
+const API_URL = "https://skillswap-backend.onrender.com";
+
 function Matching() {
+  const [profiles, setProfiles] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const matches = [
-    {
-      name: "Rahul",
-      emoji: "👨🏻‍💻",
-      age: 21,
-      location: "Bangalore",
-      languages: ["Hindi", "English"],
-      teaches: ["Python", "Java"],
-      wants: ["UI/UX"],
-      match: 96
-    },
+  // Get profiles from MongoDB
+  useEffect(() => {
+    fetch(`${API_URL}/api/profile`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch profiles");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setProfiles(data.profiles || []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setMessage("Unable to load profiles.");
+        setLoading(false);
+      });
+  }, []);
 
-    {
-      name: "Ananya",
-      emoji: "👩🏻‍💻",
-      age: 20,
-      location: "Bangalore",
-      languages: ["Hindi", "English"],
-      teaches: ["UI/UX", "Figma"],
-      wants: ["Python"],
-      match: 92
-    },
+  const currentProfile = profiles[currentIndex];
 
-    {
-      name: "Arjun",
-      emoji: "👨🏻‍🎓",
-      age: 22,
-      location: "Mysore",
-      languages: ["English", "Kannada"],
-      teaches: ["React", "HTML/CSS"],
-      wants: ["Java"],
-      match: 84
-    }
-  ];
+  const handleConnect = () => {
+    if (!currentProfile) return;
+
+    setMessage(`Connection request sent to ${currentProfile.name}!`);
+
+    setTimeout(() => {
+      setCurrentIndex((prev) => prev + 1);
+      setMessage("");
+    }, 1200);
+  };
+
+  const handlePass = () => {
+    if (!currentProfile) return;
+
+    setMessage("Profile skipped");
+
+    setTimeout(() => {
+      setCurrentIndex((prev) => prev + 1);
+      setMessage("");
+    }, 700);
+  };
+
+  if (loading) {
+    return (
+      <div className="matching-page">
+        <div className="matching-loading">
+          <div className="loading-icon">✦</div>
+          <h2>Finding your matches...</h2>
+          <p>Looking through the SkillSwap community.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentProfile) {
+    return (
+      <div className="matching-page">
+        <div className="no-matches">
+          <div className="empty-icon">✦</div>
+
+          <span className="match-label">SKILLSWAP</span>
+
+          <h1>No more profiles</h1>
+
+          <p>
+            You've reached the end of the available profiles.
+            Check again later for new students.
+          </p>
+
+          <button
+            className="primary-match-button"
+            onClick={() => window.location.reload()}
+          >
+            Refresh Matches
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="matching-page">
 
-      {/* Top navigation */}
-      <nav className="matching-nav">
+      {/* NAVBAR */}
+      <nav className="matching-navbar">
 
-        <div className="logo">
-          Skill<span>M8</span>
+        <div
+          className="matching-logo"
+          onClick={() => (window.location.href = "/")}
+        >
+          Skill<span>Swap</span>
         </div>
 
-        <div className="nav-links">
-          <button onClick={() => window.location.href = "/profile"}>
-            Profile
+        <div className="matching-nav-links">
+          <button onClick={() => (window.location.href = "/")}>
+            Dashboard
           </button>
 
           <button className="active">
-            Matches
+            Discover
           </button>
 
-          <button>
-            💬 Chat
+          <button onClick={() => (window.location.href = "/resources")}>
+            Resources
           </button>
 
-          <button>
-            🔔 Notifications
+          <button onClick={() => (window.location.href = "/chat")}>
+            Chat
           </button>
         </div>
 
       </nav>
 
 
-      {/* Main content */}
-      <main className="matching-container">
+      {/* MAIN */}
+      <main className="matching-main">
 
         <div className="matching-heading">
 
           <div>
-            <span className="eyebrow">
-              ✨ AI-POWERED DISCOVERY
+            <span className="match-label">
+              DISCOVER YOUR PEOPLE
             </span>
 
             <h1>
               Find your
-              <span> skill matches.</span>
+              <span> SkillMatch.</span>
             </h1>
 
             <p>
-              We found students whose skills, interests,
-              location and languages could match yours.
+              Connect with students who can teach what you want
+              to learn — and learn from what they know.
             </p>
           </div>
 
-          <div className="match-count">
-            <strong>{matches.length}</strong>
-            <span>Potential Matches</span>
+          <div className="match-counter">
+            <strong>
+              {profiles.length - currentIndex}
+            </strong>
+
+            <span>profiles left</span>
           </div>
 
         </div>
 
 
-        {/* Match cards */}
-        <div className="matches-grid">
+        {/* MATCH CARD */}
+        <div className="match-stage">
 
-          {matches.map((person, index) => (
+          <div className="match-card-large">
 
-            <div
-              className="match-card"
-              key={index}
-            >
+            {/* MATCH SCORE */}
+            <div className="match-score">
+              <strong>92%</strong>
+              <span>MATCH</span>
+            </div>
 
-              {/* Match percentage */}
-              <div className="match-score">
-                <span>{person.match}%</span>
-                <small>Match</small>
+
+            {/* AVATAR */}
+            <div className="large-avatar">
+              {currentProfile.name
+                ? currentProfile.name.charAt(0).toUpperCase()
+                : "S"}
+            </div>
+
+
+            {/* PROFILE INFO */}
+            <div className="profile-info">
+
+              <h2>{currentProfile.name}</h2>
+
+              <p className="profile-email">
+                {currentProfile.email}
+              </p>
+
+            </div>
+
+
+            {/* BIO */}
+            {currentProfile.bio && (
+              <div className="bio-box">
+                <span>ABOUT</span>
+
+                <p>{currentProfile.bio}</p>
+              </div>
+            )}
+
+
+            {/* SKILLS */}
+            <div className="match-section">
+
+              <div className="section-title">
+                <span>CAN TEACH</span>
               </div>
 
+              <div className="match-tags">
 
-              {/* Profile */}
-              <div className="person-info">
-
-                <div className="avatar">
-                  {person.emoji}
-                </div>
-
-                <div>
-                  <h2>{person.name}</h2>
-
-                  <p>
-                    📍 {person.location}
-                  </p>
-
-                  <p>
-                    🎂 {person.age} years
-                  </p>
-
-                </div>
-
-              </div>
-
-
-              {/* Languages */}
-              <div className="info-block">
-
-                <h3>🗣️ Languages</h3>
-
-                <div className="tags">
-
-                  {person.languages.map((language) => (
-                    <span key={language}>
-                      {language}
-                    </span>
-                  ))}
-
-                </div>
-
-              </div>
-
-
-              {/* Skills */}
-              <div className="info-block">
-
-                <h3>🚀 Can Teach</h3>
-
-                <div className="tags purple">
-
-                  {person.teaches.map((skill) => (
-                    <span key={skill}>
+                {(currentProfile.skills || []).length > 0 ? (
+                  currentProfile.skills.map((skill, index) => (
+                    <span key={index} className="skill-tag">
                       {skill}
                     </span>
-                  ))}
-
-                </div>
-
-              </div>
-
-
-              {/* Wants */}
-              <div className="info-block">
-
-                <h3>🎯 Wants To Learn</h3>
-
-                <div className="tags pink">
-
-                  {person.wants.map((skill) => (
-                    <span key={skill}>
-                      {skill}
-                    </span>
-                  ))}
-
-                </div>
+                  ))
+                ) : (
+                  <span className="skill-tag">
+                    Skills not added
+                  </span>
+                )}
 
               </div>
 
+            </div>
 
-              {/* Action */}
+
+            {/* INTERESTS */}
+            <div className="match-section">
+
+              <div className="section-title">
+                <span>INTERESTS</span>
+              </div>
+
+              <div className="match-tags">
+
+                {(currentProfile.interests || []).length > 0 ? (
+                  currentProfile.interests.map(
+                    (interest, index) => (
+                      <span
+                        key={index}
+                        className="interest-tag"
+                      >
+                        {interest}
+                      </span>
+                    )
+                  )
+                ) : (
+                  <span className="interest-tag">
+                    No interests added
+                  </span>
+                )}
+
+              </div>
+
+            </div>
+
+
+            {/* ACTION BUTTONS */}
+            <div className="match-actions">
+
+              <button
+                className="pass-button"
+                onClick={handlePass}
+                title="Pass"
+              >
+                <span>×</span>
+              </button>
+
               <button
                 className="connect-button"
-                onClick={() =>
-                  alert(`Connection request sent to ${person.name}!`)
-                }
+                onClick={handleConnect}
               >
-                💜 Connect
+                <span>♥</span>
+                Connect
               </button>
 
             </div>
 
-          ))}
+          </div>
 
         </div>
+
+
+        {/* NOTIFICATION */}
+        {message && (
+          <div className="match-notification">
+            <span className="notification-icon">✓</span>
+            {message}
+          </div>
+        )}
 
       </main>
 
